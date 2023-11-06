@@ -1,61 +1,51 @@
-# OS-EX.6-IMPLEMENTATION-OF-INTER-PROCESS-COMMUNICATION-USING-PIPE
+# EX.7-IMPLEMENTATION-OF-SYSTEM-CALLS-READ-WRITE-FORK-OPEN-CLOSE
 
-AIM:
-write C programs to illustrate IPC using pipes mechanism
+## AIM:
+C program using open, read, write, close , create , fork() system calls.
 
+### ALGORITHM:
 
+1. Star the program.
+2. Open a file for O_RDWR for R/W,O_CREATE for creating a file ,O_TRUNC for truncate
+a file.
+3. Using getchar(), read the character and stored in the string[] array.
+4. The string [] array is write into a file close it.
+5. Then the first is opened for read only mode and read the characters and displayed it and
+close the file.
+6. Use Fork().
+7. Stop the program.
 
-STEPS:
-
-1. Create a child process usingfork()
-  
-2. Create a simple pipe with C, we make use of the pipe() systemcall.
-  
-3. Create two file descriptor fd[0] is set up for reading, fd[1] isset up forwriting
-  
-4. Close the read end of parent process using close() and perform writeoperation
-  
-7. Close the write end of child process and performreading
-   
-8. Display thetext.
-
-
-PROGRAM:
-
+### PROGRAM:
 ```
-#include <stdio.h>
+#include<sys/stat.h>
+#include<stdio.h>
+#include<fcntl.h>
+#include<sys/types.h>
 int main()
 {
-int fd[2],child; char a[10];
-printf("\n Enter the string:");
-scanf("%s",a);
-pipe(fd);
-child=fork();
-if(!child)
+int n,i=0;
+int f1,f2;
+char c,strin[100];
+f1=open("data",O_RDWR|O_CREAT|O_TRUNC);
+while((c=getchar())!='\n')
 {
-close(fd[0]);
-write(fd[1],a,5); wait(0);
+strin[i++]=c;
 }
-else
-{
-close(fd[1]);
-read(fd[0],a,5);
-printf("The string received from pipe is: %s",a);
-}
+strin[i]='\0';
+write(f1,strin,i);
+close(f1);
+f2=open("data",O_RDONLY);
+read(f2,strin,0);
+printf("\n%s\n",strin);
+close(f2);
+fork();
 return 0;
 }
-
 ```
+### OUTPUT:
 
-OUTPUT:
+![read](https://github.com/MavillaPranathi/EX.7-IMPLEMENTATION-OF-SYSTEM-CALLS-READ-WRITE-FORK-OPEN-CLOSE/assets/118343610/f4609794-bbeb-4d5c-80bd-bda56510e26a)
 
-![image](https://github.com/varsha-2005/OS-EX.6-IMPLEMENTATION-OF-INTER-PROCESS-COMMUNICATION-USING-PIPE/assets/119288183/c0d07745-2d24-4978-a128-fde627172904)
-
-
-
-RESULT:
-
-Thus we got the output for the above experiment.
-
-
-
+### RESULT:
+Thus, open, read, write, close , create , fork() system calls implemented successfully using c
+program
